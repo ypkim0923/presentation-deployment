@@ -504,11 +504,11 @@ V3 - Kubernetes 배포 환경 구성
 
 기존의 문제점
 - Cloud Service 이용료가 발생
-- 특정 CLoud Platform 기술에 종속됨
+- 특정 Cloud Platform 기술에 종속됨
 
 해결 방법
 - 사내 유휴 서버 장비 활용
-- Kubernets 기반 배포 환경 구축
+- Kubernetes 기반 배포 환경 구축
 
 </div>
 
@@ -641,10 +641,15 @@ V4 - Helm, ArgoCD 연동
 
 
 기존의 문제점
-- 1
-
+- CI를 담당하는 Jenkins가 사실상의 CD까지 담당하고 있음
+	- CI에서 코드의 빌드가 성공했다고 해서 운영환경에서도 정상동작한다고 보장할 수 없음
+	- CD를 분리하면 배포 단계에서 추가적인 검증을 할 수 있음
+	- CD를 분리하면 긴급 상황 등 문제 발생 시 즉각적인 롤백을 수행 할 수 있음
+	- CI는 코드가 변경될 때마다 실행 되지만, CD는 모든 빌드 결과를 즉시 배포할 필요는 없음
+	
 해결 방법
-- 1
+- ArgoCD를 도입
+- ArgoCD 도입을 위해 Kubernetes Package Manager인 Helm 도입
 
 </div>
 
@@ -685,7 +690,8 @@ V4 - Helm, ArgoCD 연동
 
 
 
-To Be Inserted
+<img src="Presentation/Kubernetes 기반 배포 체인 구성/images/deployment_v4.png" alt="" style="object-fit: scale-down">
+
 
 </div>
 
@@ -727,10 +733,11 @@ V4 - Helm, ArgoCD 연동
 
 
 해결 된 문제
-- 1
+- CI와 CD가 분리되어 유연성 확보
 
 아직 남아 있는 문제
-- 1
+- GitOps를 위한 Helm Chart Git Repository는 자주 변하지 않음
+- 즉, CI가 실행되어 새로운 이미지가 배포 되더라도 Helm Chart가 업데이트 되지 않으면 CD가 수행되지 않음
 
 </div>
 
@@ -772,10 +779,10 @@ V5 - ArgoCD Image Updater 연동
 
 
 기존의 문제점
-- 1
+- 빌드된 새로운 이미지가 Docker Registry에 Push 될 때마다 새로 배포 되어야하는데, CI가 실행되어 새로운 이미지가 배포 되더라도 Helm Chart가 업데이트 되지 않으면 CD가 수행되지 않음
 
 해결 방법
-- 1
+- ArgoCD Image Updater를 도입하여 ArgoCD Image Updater가 Docker Registry에 이미지 업데이트를 감지하여 이미지가 업데이트 되면 Helm Chart를 업데이트 하여 자동으로 ArgoCD가 배포를 수행하도록 트리거링함
 
 </div>
 
@@ -816,7 +823,8 @@ V5 - ArgoCD Image Updater 연동
 
 
 
-To Be Inserted
+<img src="Presentation/Kubernetes 기반 배포 체인 구성/images/deployment_v5.png" alt="" style="object-fit: scale-down">
+
 
 </div>
 
@@ -858,10 +866,10 @@ V5 - ArgoCD Image Updater 연동
 
 
 해결 된 문제
-- 1
+- 개발자는 Code를 Push만하면 자동으로 빌드 테스트 부터 배포까지 자동으로 수행되는 CI/CD 배포 체인이 구성됨
 
 아직 남아 있는 문제
-- 1
+- 폐쇄망 환경에서는 github나 gitlab 같은 외부 git 서버에 연결 할 수 없음. 즉, ArgoCD가 GitOps를 위해 Helm Chart 업데이트를 확인 할 수 없음
 
 </div>
 
@@ -903,10 +911,10 @@ V6 - 폐쇄망 배포 체인 구성
 
 
 기존의 문제점
-- 1
+- 폐쇄망 환경에서는 github나 gitlab 같은 외부 git 서버에 연결 할 수 없음. 즉, ArgoCD가 GitOps를 위해 Helm Chart 업데이트를 확인 할 수 없음
 
 해결 방법
-- 1
+- Kubernetes Cluster에 사설 Git 서버인 Gitea 도입
 
 </div>
 
@@ -947,7 +955,9 @@ V6 - 폐쇄망 배포 체인 구성
 
 
 
-To Be Inserted
+(폐쇄망 배포 및 운영 환경이기 때문에 Jenkins 서버는 없음)
+<img src="Presentation/Kubernetes 기반 배포 체인 구성/images/deployment_v6.png" alt="" style="object-fit: scale-down">
+
 
 </div>
 
@@ -989,10 +999,8 @@ V6 - 폐쇄망 배포 체인 구성
 
 
 해결 된 문제
-- 1
+- 폐쇄망에서도 정상 동작
 
-아직 남아 있는 문제
-- 1
 
 </div>
 
